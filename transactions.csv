@@ -1,0 +1,5 @@
+Account,Action,Amount
+checking,deposit,100
+checking,deposit,100
+checking,withdraw,100
+savings,deposit,10
