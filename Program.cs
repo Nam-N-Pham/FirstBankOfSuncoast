@@ -52,7 +52,7 @@ namespace FirstBankOfSuncoast
                 {
                     checkingAccount = checkingAccount + transaction.Amount;
                 }
-                if (transaction.Account == "savings" && transaction.Action == "withdraw")
+                if (transaction.Account == "checking" && transaction.Action == "withdraw")
                 {
                     checkingAccount = checkingAccount - transaction.Amount;
                 }
@@ -72,7 +72,7 @@ namespace FirstBankOfSuncoast
                 }
                 if (transaction.Account == "savings" && transaction.Action == "withdraw")
                 {
-                    savingsAccount = savingsAccount + transaction.Amount;
+                    savingsAccount = savingsAccount - transaction.Amount;
                 }
             }
             if (savingsAccount < 0)
@@ -130,6 +130,12 @@ namespace FirstBankOfSuncoast
                         Console.WriteLine("How much would you like to deposit?");
                         int depositAmount = int.Parse(Console.ReadLine());
 
+                        if (depositAmount < 0)
+                        {
+                            Console.WriteLine("Invalid amount to deposit.");
+                            break;
+                        }
+
                         if (depositChoice == "checking")
                         {
                             checkingAccount = checkingAccount + depositAmount;
@@ -169,6 +175,12 @@ namespace FirstBankOfSuncoast
                         string withdrawChoice = Console.ReadLine().ToLower();
                         Console.WriteLine("How much would you like to withdraw?");
                         int withdrawAmount = int.Parse(Console.ReadLine());
+
+                        if (withdrawAmount < 0)
+                        {
+                            Console.WriteLine("Invalid amount to withdraw.");
+                            break;
+                        }
 
                         if (withdrawChoice == "checking")
                         {
