@@ -140,10 +140,12 @@ namespace FirstBankOfSuncoast
                         {
                             checkingAccount = checkingAccount + depositAmount;
 
-                            Transaction depositCheckingTransaction = new Transaction();
-                            depositCheckingTransaction.Account = "checking";
-                            depositCheckingTransaction.Action = "deposit";
-                            depositCheckingTransaction.Amount = depositAmount;
+                            Transaction depositCheckingTransaction = new Transaction()
+                            {
+                                Account = "checking",
+                                Action = "deposit",
+                                Amount = depositAmount
+                            };
 
                             transactions.Add(depositCheckingTransaction);
 
@@ -157,10 +159,12 @@ namespace FirstBankOfSuncoast
                         {
                             savingsAccount = savingsAccount + depositAmount;
 
-                            Transaction depositSavingsTransaction = new Transaction();
-                            depositSavingsTransaction.Account = "savings";
-                            depositSavingsTransaction.Action = "deposit";
-                            depositSavingsTransaction.Amount = depositAmount;
+                            Transaction depositSavingsTransaction = new Transaction()
+                            {
+                                Account = "savings",
+                                Action = "deposit",
+                                Amount = depositAmount
+                            };
 
                             transactions.Add(depositSavingsTransaction);
 
@@ -191,10 +195,12 @@ namespace FirstBankOfSuncoast
                             }
                             checkingAccount = checkingAccount - withdrawAmount;
 
-                            Transaction withdrawCheckingTransaction = new Transaction();
-                            withdrawCheckingTransaction.Account = "checking";
-                            withdrawCheckingTransaction.Action = "withdraw";
-                            withdrawCheckingTransaction.Amount = withdrawAmount;
+                            Transaction withdrawCheckingTransaction = new Transaction()
+                            {
+                                Account = "checking",
+                                Action = "withdraw",
+                                Amount = withdrawAmount
+                            };
 
                             transactions.Add(withdrawCheckingTransaction);
 
@@ -213,10 +219,12 @@ namespace FirstBankOfSuncoast
                             }
                             savingsAccount = savingsAccount - withdrawAmount;
 
-                            Transaction withdrawSavingsTransaction = new Transaction();
-                            withdrawSavingsTransaction.Account = "savings";
-                            withdrawSavingsTransaction.Action = "withdraw";
-                            withdrawSavingsTransaction.Amount = withdrawAmount;
+                            Transaction withdrawSavingsTransaction = new Transaction()
+                            {
+                                Account = "savings",
+                                Action = "withdraw",
+                                Amount = withdrawAmount
+                            };
 
                             transactions.Add(withdrawSavingsTransaction);
 
