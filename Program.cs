@@ -12,22 +12,6 @@ namespace FirstBankOfSuncoast
         public string Account { get; set; }
         public string Action { get; set; }
         public int Amount { get; set; }
-
-        public void showTransactionIfChecking()
-        {
-            if (Account == "checking")
-            {
-                Console.WriteLine($"{Action}ed ${Amount}");
-            }
-        }
-
-        public void showTransactionIfSavings()
-        {
-            if (Account == "savings")
-            {
-                Console.WriteLine($"{Action}ed ${Amount}");
-            }
-        }
     }
 
     class Program
@@ -46,6 +30,7 @@ namespace FirstBankOfSuncoast
 
             // Setting up checking and savings accounts based on transaction input document
             int checkingAccount = 0;
+            int savingsAccount = 0;
             foreach (Transaction transaction in transactions)
             {
                 if (transaction.Account == "checking" && transaction.Action == "deposit")
@@ -56,9 +41,13 @@ namespace FirstBankOfSuncoast
                 {
                     checkingAccount = checkingAccount - transaction.Amount;
                 }
+                if (transaction.Account == "checking" && transaction.Action == "transfer")
+                {
+                    savingsAccount = savingsAccount - transaction.Amount;
+                    checkingAccount = checkingAccount + transaction.Amount;
+                }
             }
 
-            int savingsAccount = 0;
             foreach (Transaction transaction in transactions)
             {
                 if (transaction.Account == "savings" && transaction.Action == "deposit")
@@ -69,21 +58,26 @@ namespace FirstBankOfSuncoast
                 {
                     savingsAccount = savingsAccount - transaction.Amount;
                 }
-            }
-
-            foreach (Transaction transaction in transactions)
-            {
-                if (transaction.Account == "checking" && transaction.Action == "transfer")
-                {
-                    savingsAccount = savingsAccount - transaction.Amount;
-                    checkingAccount = checkingAccount + transaction.Amount;
-                }
                 if (transaction.Account == "savings" && transaction.Action == "transfer")
                 {
                     checkingAccount = checkingAccount - transaction.Amount;
-                    savingsAccount = savingsAccount - transaction.Amount;
+                    savingsAccount = savingsAccount + transaction.Amount;
                 }
             }
+
+            // foreach (Transaction transaction in transactions)
+            // {
+            //     if (transaction.Account == "checking" && transaction.Action == "transfer")
+            //     {
+            //         savingsAccount = savingsAccount - transaction.Amount;
+            //         checkingAccount = checkingAccount + transaction.Amount;
+            //     }
+            //     if (transaction.Account == "savings" && transaction.Action == "transfer")
+            //     {
+            //         checkingAccount = checkingAccount - transaction.Amount;
+            //         savingsAccount = savingsAccount - transaction.Amount;
+            //     }
+            // }
 
             // Check that accounts are all >= 0 from input file
             if (checkingAccount < 0)
@@ -117,7 +111,6 @@ namespace FirstBankOfSuncoast
                         {
                             foreach (Transaction transaction in transactions)
                             {
-                                // transaction.showTransactionIfChecking();
                                 if (transaction.Action != "transfer" && transaction.Account == "checking")
                                 {
                                     Console.WriteLine($"{transaction.Action}ed ${transaction.Amount}.");
@@ -136,7 +129,6 @@ namespace FirstBankOfSuncoast
                         {
                             foreach (Transaction transaction in transactions)
                             {
-                                // transaction.showTransactionIfSavings();
                                 if (transaction.Action != "transfer" && transaction.Account == "savings")
                                 {
                                     Console.WriteLine($"{transaction.Action}ed ${transaction.Amount}.");
