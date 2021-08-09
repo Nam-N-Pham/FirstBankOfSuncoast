@@ -57,11 +57,6 @@ namespace FirstBankOfSuncoast
                     checkingAccount = checkingAccount - transaction.Amount;
                 }
             }
-            if (checkingAccount < 0)
-            {
-                Console.WriteLine("Checking account is negative from input file, exiting program.");
-                return;
-            }
 
             int savingsAccount = 0;
             foreach (Transaction transaction in transactions)
@@ -75,6 +70,27 @@ namespace FirstBankOfSuncoast
                     savingsAccount = savingsAccount - transaction.Amount;
                 }
             }
+
+            foreach (Transaction transaction in transactions)
+            {
+                if (transaction.Account == "checking" && transaction.Action == "transfer")
+                {
+                    savingsAccount = savingsAccount - transaction.Amount;
+                    checkingAccount = checkingAccount + transaction.Amount;
+                }
+                if (transaction.Account == "savings" && transaction.Action == "transfer")
+                {
+                    checkingAccount = checkingAccount - transaction.Amount;
+                    savingsAccount = savingsAccount - transaction.Amount;
+                }
+            }
+
+            // Check that accounts are all >= 0 from input file
+            if (checkingAccount < 0)
+            {
+                Console.WriteLine("Checking account is negative from input file, exiting program.");
+                return;
+            }
             if (savingsAccount < 0)
             {
                 Console.WriteLine("Savings account is negative from input file, exiting program.");
@@ -86,7 +102,7 @@ namespace FirstBankOfSuncoast
             bool runApp = true;
             while (runApp)
             {
-                Console.WriteLine("Type the option you would like to do: Show Transactions, Show Balance, Deposit, Withdraw, or Quit.");
+                Console.WriteLine("Type the option you would like to do: Show Transactions, Show Balance, Deposit, Withdraw, Transfer, or Quit.");
                 string chosenOption = Console.ReadLine().ToLower();
 
                 switch (chosenOption)
@@ -101,14 +117,38 @@ namespace FirstBankOfSuncoast
                         {
                             foreach (Transaction transaction in transactions)
                             {
-                                transaction.showTransactionIfChecking();
+                                // transaction.showTransactionIfChecking();
+                                if (transaction.Action != "transfer" && transaction.Account == "checking")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount}.");
+                                }
+                                if (transaction.Action == "transfer" && transaction.Account == "checking")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount} into {transaction.Account}.");
+                                }
+                                if (transaction.Action == "transfer" && transaction.Account == "savings")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount} into savings.");
+                                }
                             }
                         }
                         if (typeOfTransaction == "savings")
                         {
                             foreach (Transaction transaction in transactions)
                             {
-                                transaction.showTransactionIfSavings();
+                                // transaction.showTransactionIfSavings();
+                                if (transaction.Action != "transfer" && transaction.Account == "savings")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount}.");
+                                }
+                                if (transaction.Action == "transfer" && transaction.Account == "savings")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount} into {transaction.Account}.");
+                                }
+                                if (transaction.Action == "transfer" && transaction.Account == "checking")
+                                {
+                                    Console.WriteLine($"{transaction.Action}ed ${transaction.Amount} into checking.");
+                                }
                             }
                         }
                         break;
@@ -190,7 +230,7 @@ namespace FirstBankOfSuncoast
                         {
                             if (checkingAccount - withdrawAmount < 0)
                             {
-                                Console.WriteLine("Invalid withdrawl, not enough money");
+                                Console.WriteLine("Invalid withdrawl, not enough money.");
                                 break;
                             }
                             checkingAccount = checkingAccount - withdrawAmount;
@@ -214,7 +254,7 @@ namespace FirstBankOfSuncoast
                         {
                             if (savingsAccount - withdrawAmount < 0)
                             {
-                                Console.WriteLine("Invalid withdrawl, not enough money");
+                                Console.WriteLine("Invalid withdrawl, not enough money.");
                                 break;
                             }
                             savingsAccount = savingsAccount - withdrawAmount;
@@ -234,6 +274,70 @@ namespace FirstBankOfSuncoast
                             fileWriter.Close();
                         }
                         break;
+                    case "transfer":
+                        Console.WriteLine("Which account would you like to transfer to? Checking or savings?");
+                        string transferChoice = Console.ReadLine().ToLower();
+                        Console.WriteLine("How much would you like to transfer?");
+                        int transferAmount = int.Parse(Console.ReadLine());
+
+                        if (transferAmount < 0)
+                        {
+                            Console.WriteLine("Invalid amount to transfer.");
+                            break;
+                        }
+
+                        if (transferChoice == "checking")
+                        {
+                            if (savingsAccount - transferAmount < 0)
+                            {
+                                Console.WriteLine("Invalid transfer, not enough money in savings account.");
+                                break;
+                            }
+                            savingsAccount = savingsAccount - transferAmount;
+                            checkingAccount = checkingAccount + transferAmount;
+
+                            Transaction transferToCheckingTransaction = new Transaction()
+                            {
+                                Account = "checking",
+                                Action = "transfer",
+                                Amount = transferAmount
+                            };
+
+                            transactions.Add(transferToCheckingTransaction);
+
+                            StreamWriter fileWriter = new StreamWriter("transactions.csv");
+                            CsvWriter csvWriter = new CsvWriter(fileWriter, CultureInfo.InvariantCulture);
+                            csvWriter.WriteRecords(transactions);
+                            fileWriter.Close();
+                        }
+
+                        if (transferChoice == "savings")
+                        {
+                            if (checkingAccount - transferAmount < 0)
+                            {
+                                Console.WriteLine("Invalid transfer, not enough money in checking account.");
+                                break;
+                            }
+                            checkingAccount = checkingAccount - transferAmount;
+                            savingsAccount = savingsAccount + transferAmount;
+
+                            Transaction transferToSavingsTransaction = new Transaction()
+                            {
+                                Account = "savings",
+                                Action = "transfer",
+                                Amount = transferAmount
+                            };
+
+                            transactions.Add(transferToSavingsTransaction);
+
+                            StreamWriter fileWriter = new StreamWriter("transactions.csv");
+                            CsvWriter csvWriter = new CsvWriter(fileWriter, CultureInfo.InvariantCulture);
+                            csvWriter.WriteRecords(transactions);
+                            fileWriter.Close();
+                        }
+
+                        break;
+
                     default:
                         Console.WriteLine("Only enter the given options spelled correctly.");
                         break;

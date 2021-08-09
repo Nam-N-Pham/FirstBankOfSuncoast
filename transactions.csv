@@ -5,3 +5,5 @@ checking,withdraw,100
 savings,deposit,10
 savings,withdraw,5
 checking,deposit,20
+checking,transfer,5
+savings,transfer,25
